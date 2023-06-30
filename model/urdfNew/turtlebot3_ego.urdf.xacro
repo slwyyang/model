@@ -1,0 +1,219 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="./common_properties.xacro"/>
+  <xacro:include filename="./turtlebot3_ego.gazebo.xacro"/>
+  
+  <xacro:macro name="turtlebot3_ego" params="no_arm">
+
+    <link name="base_footprint"/>
+
+    <joint name="base_joint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link_car"/>
+      <origin xyz="0.0 0.0 0.05" rpy="0 0 0"/>
+    </joint>
+
+    <link name="base_link_car">
+    <!-- car + aubo -->
+      <xacro:unless value="${no_arm}">
+        <visual>
+          <origin xyz="0.63 0 0.0" rpy="0 0 -3.14"/>
+          <geometry>
+            <mesh filename="./meshes/bases/ws04.dae" scale="1 1 1"/>
+          </geometry>
+          <!-- <material name="">
+            <color rgba="0.5 0.4 0.4 1.0"/>
+          </material> -->
+        </visual>
+      </xacro:unless>
+
+      <xacro:if value="${no_arm}">
+        <visual>
+          <origin xyz="0.8 0 0.0" rpy="1.57 0 -3.14"/>
+          <geometry>
+            <mesh filename="./meshes/bases/egobase.dae" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="">
+            <color rgba="0.1 0.4 0.4 1.0"/>
+          </material>
+        </visual>
+      </xacro:if>
+
+      <collision>
+        <origin xyz="0.1 0 0.05" rpy="0 0 -3.14"/>
+        <geometry>
+          <box size="1.40 0.40 0.1"/>
+          <!-- <mesh filename="./meshes/bases/ws04.STL" scale="1 1 1"/> -->
+        </geometry>
+      </collision>
+      <!-- fork + aubo -->
+      <xacro:unless value="${no_arm}">
+        <inertial>
+          <origin xyz="0.05 0 0.05" rpy="0 0 0"/>
+          <mass value="650.3573504"/>
+          <inertia ixx="8.7002718e-02" ixy="-4.7576583e-05" ixz="1.1160499e-04"
+                  iyy="8.6195418e-02" iyz="-3.5422299e-06"
+                  izz="1.4612727e-01" />
+        </inertial>
+      </xacro:unless>
+      <!-- only fork -->  
+      <xacro:if value="${no_arm}">
+          <inertial>
+          <origin xyz="0.065 0 0.05" rpy="0 0 0"/>
+          <mass value="150.3573504"/>
+          <inertia ixx="8.7002718e-02" ixy="-4.7576583e-05" ixz="1.1160499e-04"
+                  iyy="8.6195418e-02" iyz="-3.5422299e-06"
+                  izz="1.4612727e-01" />
+        </inertial>
+      </xacro:if>
+    </link>
+
+    <joint name="wheel_left_joint" type="continuous">
+      <parent link="base_link_car"/>
+      <child link="wheel_left_link"/>
+      <origin xyz="0.05 0.2 0.0" rpy="-1.57 0 0"/>
+      <axis xyz="0 0 1"/>
+      <dynamics damping="0.1" friction="0.0"/>
+    </joint>
+
+    <link name="wheel_left_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="./meshes/wheels/left_tire.stl" scale="0.0015 0.0015 0.0015"/>
+          <!-- <cylinder length="0.05" radius="0.05"/> -->
+        </geometry>
+        <material name="dark"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.036" radius="0.05"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 0" />
+        <mass value="1.0498940e-01" />
+        <inertia ixx="1.1175580e-04" ixy="-4.2369783e-10" ixz="-5.9381719e-08"
+                iyy="1.1192413e-04" iyz="-1.4400107e-10"
+                izz="2.0712558e-04" />
+        </inertial>
+    </link>
+
+    <joint name="wheel_right_joint" type="continuous">
+      <parent link="base_link_car"/>
+      <child link="wheel_right_link"/>
+      <origin xyz="0.05 -0.20 0" rpy="-1.57 0 0"/>
+      <axis xyz="0 0 1"/>
+      <dynamics damping="0.1" friction="0.0"/>
+    </joint>
+
+    <link name="wheel_right_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="./meshes/wheels/right_tire.stl" scale="0.0015 0.0015 0.0015"/>
+          <!-- <cylinder length="0.05" radius="0.05"/> -->
+        </geometry>
+        <material name="red"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.036" radius="0.05"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 0" />
+        <mass value="1.0498940e-01" />
+        <inertia ixx="1.1175580e-04" ixy="-4.2369783e-10" ixz="-5.9381719e-08"
+                iyy="1.1192413e-04" iyz="-1.4400107e-10"
+                izz="2.0712558e-04" />
+        </inertial>
+    </link>
+
+
+
+
+    <joint name="caster_back_joint" type="fixed">
+      <parent link="base_link_car"/>
+      <child link="caster_back_link"/>
+      <origin xyz="0.95 0 0.0" rpy="-1.57 0 0"/>
+    </joint>
+
+    <link name="caster_back_link">
+      <collision>
+        <origin xyz="0 0.0 0" rpy="0 0 0"/>
+        <geometry>
+          <!-- <box size="0.050 0.132 0.1"/> -->
+          <cylinder length="0.05" radius="0.05"/>
+        </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="-0.1 0 0" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="./meshes/wheels/right_tire.stl" scale="0.0015 0.0015 0.0015"/>
+          <!-- <cylinder length="0.05" radius="0.05"/> -->
+        </geometry>
+        <material name="dark"/>
+      </visual>
+
+      <inertial>
+        <origin xyz="0 0 0" />
+        <mass value="1.0498940e-02" />
+        <inertia ixx="1.0" ixy="-4.2369783e-10" ixz="-5.9381719e-08"
+                iyy="1.0" iyz="-1.4400107e-10"
+                izz="1.0" />
+        </inertial>
+    </link>
+
+    <joint name="imu_joint" type="fixed">
+      <parent link="base_link_car"/>
+      <child link="imu_link"/>
+      <origin xyz="0.68 0 0.68" rpy="0 0 0"/>
+    </joint>
+
+    <link name="imu_link"/>
+
+    <joint name="scan_joint" type="fixed">
+      <parent link="base_link_car"/>
+      <child link="base_scan"/>
+      <xacro:unless value="${no_arm}">
+        <origin xyz="0.68 -0.2 1.05" rpy="0 0 0"/>
+      </xacro:unless>
+      <xacro:if value="${no_arm}">
+        <origin xyz="0.68 0 0.4" rpy="0 0 0"/>
+      </xacro:if>
+    </joint>
+
+    <link name="base_scan">
+      <visual>
+        <origin xyz="0 0 0.0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="./meshes/sensors/lds.stl" scale="0.002 0.002 0.002"/>
+        </geometry>
+        <material name="dark"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0.015 0 -0.0065" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.00315" radius="0.0055"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="0.114" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+      </inertial>
+    </link>
+  </xacro:macro>
+</robot>

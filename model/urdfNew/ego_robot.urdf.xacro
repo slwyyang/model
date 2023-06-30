@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="car_ego" >
+
+
+  <xacro:include filename="./turtlebot3_ego.urdf.xacro" />
+  <!-- car -->
+  <xacro:turtlebot3_ego no_arm="True"/>
+
+
+</robot>

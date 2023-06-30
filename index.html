@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>文件列表</title>
+  <style>
+    ul {
+      list-style-type: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>文件列表</h1>
+  <ul id="file-list"></ul>
+
+  <script>
+    // 获取当前目录下的文件列表
+    fetch('/')
+      .then(response => response.text())
+      .then(data => {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(data, 'text/html');
+        const files = Array.from(htmlDoc.querySelectorAll('a')).map(a => a.getAttribute('href'));
+
+        // 在页面上动态生成文件列表
+        const fileListElement = document.getElementById('file-list');
+        files.forEach(file => {
+          if (file !== '../' && file !== './') {
+            const listItem = document.createElement('li');
+            listItem.textContent = file;
+            fileListElement.appendChild(listItem);
+          }
+        });
+      })
+      .catch(error => console.error('Failed to retrieve file list:', error));
+  </script>
+</body>
+</html>

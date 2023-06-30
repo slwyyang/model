@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="car_aubo" >
+
+  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+  <!-- common stuff -->
+  <xacro:include filename="./common.gazebo.xacro" />
+
+  <!-- ur10 -->
+  <xacro:include filename="./car_aubo.urdf.xacro" />
+
+  <xacro:include filename="./turtlebot3_ego.urdf.xacro" />
+  <!-- car -->
+  <xacro:turtlebot3_ego no_arm="false"/>
+
+  <!-- arm -->
+  <xacro:aubo_robot prefix="aubo_" joint_limited="false"
+    transmission_hw_interface="$(arg transmission_hw_interface)"
+  />
+
+
+  <joint name="car_aubo_joint" type="fixed">
+    <parent link="base_link_car" />
+    <child link = "aubo_base_link" />
+    <origin xyz="0.65 0.2 1.0" rpy="0.0 0.0 ${-pi/2}" />
+  </joint>
+
+</robot>
